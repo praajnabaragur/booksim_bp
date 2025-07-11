@@ -63,6 +63,56 @@ int gNumVCs;
  */
 
 // ============================================================
+
+void dim_order_torus_credit( const Router *r, const Flit *f, int in_channel, 
+                       OutputSet *outputs, bool inject )
+{
+  int vcBegin = 0, vcEnd = gNumVCs-1;
+  if ( f->type == Flit::READ_REQUEST ) {
+    vcBegin = gReadReqBeginVC;
+    vcEnd = gReadReqEndVC;
+  } else if ( f->type == Flit::WRITE_REQUEST ) {
+    vcBegin = gWriteReqBeginVC;
+    vcEnd = gWriteReqEndVC;
+  } else if ( f->type ==  Flit::READ_REPLY ) {
+    vcBegin = gReadReplyBeginVC;
+    vcEnd = gReadReplyEndVC;
+  } else if ( f->type ==  Flit::WRITE_REPLY ) {
+    vcBegin = gWriteReplyBeginVC;
+    vcEnd = gWriteReplyEndVC;
+  }
+
+  int out_port;
+
+  if(inject) {
+    out_port = -1;
+  } else {
+    int dest = f->dest;
+    int cur = r->GetID();
+    
+    // Route dimension by dimension
+    for ( int dim = 0; dim < gN; ++dim ) {
+      int cur_pos = ( cur / powi(gK, dim) ) % gK;
+      int dest_pos = ( dest / powi(gK, dim) ) % gK;
+      
+      if ( cur_pos != dest_pos ) {
+        // Always route in positive (clockwise) direction
+        out_port = dim; // output port for this dimension
+        outputs->Clear( );
+        outputs->AddRange( out_port, vcBegin, vcEnd );
+        return;
+      }
+    }
+    
+    // We've reached the destination
+    out_port = gN; // ejection port
+  }
+
+  outputs->Clear( );
+  outputs->AddRange( out_port, vcBegin, vcEnd );
+}
+
+
 //  Balfour-Schultz
 int gReadReqBeginVC, gReadReqEndVC;
 int gWriteReqBeginVC, gWriteReqEndVC;
@@ -1956,6 +2006,8 @@ void InitializeRoutingMap( const Configuration & config )
   }
 
   /* Register routing functions here */
+  gRoutingFunctionMap["dim_order_torus_credit"] = &dim_order_torus_credit;
+
 
   // ===================================================
   // Balfour-Schultz

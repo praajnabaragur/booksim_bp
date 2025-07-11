@@ -47,6 +47,8 @@
 #include "fattree.hpp"
 #include "anynet.hpp"
 #include "dragonfly.hpp"
+#include "torus_credit.hpp"
+
 
 
 Network::Network( const Configuration &config, const string & name ) :
@@ -84,6 +86,9 @@ Network * Network::New(const Configuration & config, const string & name)
   if ( topo == "torus" ) {
     KNCube::RegisterRoutingFunctions() ;
     n = new KNCube( config, name, false );
+  } else if ( topo == "torus_credit" ) {
+    TorusCredit::RegisterRoutingFunctions();
+    n = new TorusCredit( config, name );
   } else if ( topo == "mesh" ) {
     KNCube::RegisterRoutingFunctions() ;
     n = new KNCube( config, name, true );

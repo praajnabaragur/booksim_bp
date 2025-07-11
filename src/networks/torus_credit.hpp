@@ -25,19 +25,38 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _BOOKSIM_HPP_
-#define _BOOKSIM_HPP_
+#ifndef _TORUS_CREDIT_HPP_
+#define _TORUS_CREDIT_HPP_
 
-#include <string>
-#include <cstdlib>
-#include <cstring>
-#include <climits>
-#include <cassert>
-#ifdef _WIN32_
-#pragma warning (disable: 4786)
-#include <ostream>
-#endif
+#include "network.hpp"
+#include "routefunc.hpp"
 
-using namespace std;
+class TorusCredit : public Network {
+
+  int _k;
+  int _n;
+
+  void _ComputeSize( const Configuration &config );
+  void _BuildNet( const Configuration &config );
+
+  int _OutputChannel( int node, int dim );
+  int _NextNode( int node, int dim );
+  int _PrevNode( int node, int dim );
+
+public:
+
+  TorusCredit( const Configuration &config, const string & name );
+
+  static void RegisterRoutingFunctions();
+
+  int GetN( ) const;
+  int GetK( ) const;
+
+  double Capacity( ) const;
+};
+
+// Routing functions for unidirectional torus
+void dor_torus_credit( const Router *r, const Flit *f, int in_channel, 
+                       OutputSet *outputs, bool inject );
 
 #endif
