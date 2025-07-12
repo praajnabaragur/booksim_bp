@@ -65,6 +65,7 @@ TrafficPattern * TrafficPattern::New(string const & pattern, int nodes,
   vector<string> params = tokenize_str(param_str);
   
   TrafficPattern * result = NULL;
+  
   if(pattern_name == "bitcomp") {
     result = new BitCompTrafficPattern(nodes);
   } else if(pattern_name == "transpose") {
@@ -81,7 +82,7 @@ TrafficPattern * TrafficPattern::New(string const & pattern, int nodes,
 	  perm_seed = int(time(NULL));
 	  cout << "SEED: perm_seed=" << perm_seed << endl;
 	} else {
-	  perm_seed = config->GetInt("perm_seed");
+	  perm_seed = config->GetInt("per_seed");
 	}
       } else {
 	cout << "Error: Missing parameter for random permutation traffic pattern: " << pattern << endl;
@@ -91,6 +92,16 @@ TrafficPattern * TrafficPattern::New(string const & pattern, int nodes,
       perm_seed = atoi(params[0].c_str());
     }
     result = new RandomPermutationTrafficPattern(nodes, perm_seed);
+  } else if(pattern_name == "single_packet") {
+    // Hardcode for testing: Node 5 -> Node 10
+    int source = 5;
+    int dest = 10;
+    result = new SinglePacketTrafficPattern(nodes, source, dest);
+  } else if(pattern_name == "single_packet_reverse") {
+    // Hardcode for testing: Node 10 -> Node 5
+    int source = 10;
+    int dest = 5;
+    result = new SinglePacketTrafficPattern(nodes, source, dest);
   } else if(pattern_name == "uniform") {
     result = new UniformRandomTrafficPattern(nodes);
   } else if(pattern_name == "background") {
@@ -202,6 +213,28 @@ PermutationTrafficPattern::PermutationTrafficPattern(int nodes)
   : TrafficPattern(nodes)
 {
   
+}
+
+SinglePacketTrafficPattern::SinglePacketTrafficPattern(int nodes, int source, int dest)
+  : TrafficPattern(nodes), _source(source), _destination(dest), _sent(false)
+{
+  assert((source >= 0) && (source < nodes));
+  assert((dest >= 0) && (dest < nodes));
+}
+
+int SinglePacketTrafficPattern::dest(int source)
+{
+  // Only allow the specific source to send to specific destination
+  if(source == _source) {
+    return _destination;
+  }
+  // All other nodes send to themselves (no traffic)
+  return source;
+}
+
+void SinglePacketTrafficPattern::reset()
+{
+  _sent = false;
 }
 
 BitPermutationTrafficPattern::BitPermutationTrafficPattern(int nodes)

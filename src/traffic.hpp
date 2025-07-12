@@ -51,6 +51,19 @@ protected:
   PermutationTrafficPattern(int nodes);
 };
 
+class SinglePacketTrafficPattern : public TrafficPattern
+{
+private:
+  int _source;
+  int _destination;
+  bool _sent;
+
+public:
+  SinglePacketTrafficPattern(int nodes, int source, int dest);
+  virtual int dest(int source);
+  virtual void reset();
+};
+
 class BitPermutationTrafficPattern : public PermutationTrafficPattern {
 protected:
   BitPermutationTrafficPattern(int nodes);
