@@ -22,6 +22,8 @@ sim_count = 200;
 sample_period = 1000;
 max_samples = 10;
 warmup_periods = 2;
+single_packet_source = 5;
+single_packet_dest = 10;
 EOF
 
 echo "Forward (5→10) results:"
@@ -34,12 +36,14 @@ topology = torus_credit;
 k = 4;
 n = 2;
 routing_function = dim_order;
-traffic = single_packet_reverse;
+traffic = single_packet;
 injection_rate = 0.1;
 sim_count = 200;
 sample_period = 1000;
 max_samples = 10;
 warmup_periods = 2;
+single_packet_source = 10;
+single_packet_dest = 5;
 EOF
 
 echo "Reverse (10→5) results:"
@@ -66,6 +70,5 @@ echo "• Bidirectional: ~2 hops (direct path: +1X, +1Y)"
 echo "• Unidirectional efficient direction: ~2 hops"  
 echo "• Unidirectional forced direction: ~6 hops (wrap around)"
 echo ""
-echo "🎯 If you see different hop counts, your routing asymmetry is working!"
 
 rm -f hop_5_to_10.cfg hop_10_to_5.cfg hop_bidir_5_10.cfg

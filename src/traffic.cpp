@@ -82,7 +82,7 @@ TrafficPattern * TrafficPattern::New(string const & pattern, int nodes,
 	  perm_seed = int(time(NULL));
 	  cout << "SEED: perm_seed=" << perm_seed << endl;
 	} else {
-	  perm_seed = config->GetInt("per_seed");
+	  perm_seed = config->GetInt("perm_seed");
 	}
       } else {
 	cout << "Error: Missing parameter for random permutation traffic pattern: " << pattern << endl;
@@ -93,14 +93,27 @@ TrafficPattern * TrafficPattern::New(string const & pattern, int nodes,
     }
     result = new RandomPermutationTrafficPattern(nodes, perm_seed);
   } else if(pattern_name == "single_packet") {
-    // Hardcode for testing: Node 5 -> Node 10
-    int source = 5;
-    int dest = 10;
-    result = new SinglePacketTrafficPattern(nodes, source, dest);
-  } else if(pattern_name == "single_packet_reverse") {
-    // Hardcode for testing: Node 10 -> Node 5
-    int source = 10;
-    int dest = 5;
+    // Read source and destination from config file
+    int source = config->GetInt("single_packet_source");
+    int dest = config->GetInt("single_packet_dest");
+    
+    // Validate the values
+    if (source < 0 || source >= nodes) {
+        cout << "Error: Invalid single_packet_source: " << source 
+            << ". Must be between 0 and " << (nodes-1) << endl;
+        exit(-1);
+    }
+    if (dest < 0 || dest >= nodes) {
+        cout << "Error: Invalid single_packet_dest: " << dest 
+            << ". Must be between 0 and " << (nodes-1) << endl;
+        exit(-1);
+    }
+    if (source == dest) {
+        cout << "Error: single_packet_source and single_packet_dest cannot be the same" << endl;
+        exit(-1);
+    }
+    
+    cout << "Single packet traffic: Node " << source << " -> Node " << dest << endl;
     result = new SinglePacketTrafficPattern(nodes, source, dest);
   } else if(pattern_name == "uniform") {
     result = new UniformRandomTrafficPattern(nodes);

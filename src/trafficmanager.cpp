@@ -670,12 +670,16 @@ void TrafficManager::_RetireFlit( Flit *f, int dest )
         Error( err.str( ) );
     }
   
-    if((_slowest_flit[f->cl] < 0) ||
-       (_flat_stats[f->cl]->Max() < (f->atime - f->itime)))
-        _slowest_flit[f->cl] = f->id;
-    _flat_stats[f->cl]->AddSample( f->atime - f->itime);
-    if(_pair_stats){
-        _pair_flat[f->cl][f->src*_nodes+dest]->AddSample( f->atime - f->itime );
+    bool is_self_loop_flit = (f->src == dest);
+
+    if (!is_self_loop_flit) {
+        if((_slowest_flit[f->cl] < 0) ||
+        (_flat_stats[f->cl]->Max() < (f->atime - f->itime)))
+            _slowest_flit[f->cl] = f->id;
+        _flat_stats[f->cl]->AddSample( f->atime - f->itime);
+        if(_pair_stats){
+            _pair_flat[f->cl][f->src*_nodes+dest]->AddSample( f->atime - f->itime );
+        }
     }
       
     if ( f->tail ) {

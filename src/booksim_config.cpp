@@ -96,6 +96,10 @@ BookSimConfig::BookSimConfig( )
 
   //==== Input-queued ======================================
 
+  // Single packet traffic pattern parameters
+  _int_map["single_packet_source"] = 0;  // Default source node
+  _int_map["single_packet_dest"] = 1;    // Default destination node
+
   // Control of virtual channel speculation
   _int_map["speculative"] = 0 ;
   _int_map["spec_check_elig"] = 1 ;
