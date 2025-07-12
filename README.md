@@ -10,3 +10,10 @@ The current major release, BookSim 2.0, supports a wide range of topologies such
 If you use BookSim in your research, we would appreciate the following citation in any publications to which it has contributed:
 
 Nan Jiang, Daniel U. Becker, George Michelogiannakis, James Balfour, Brian Towles, John Kim and William J. Dally. A Detailed and Flexible Cycle-Accurate Network-on-Chip Simulator. In *Proceedings of the 2013 IEEE International Symposium on Performance Analysis of Systems and Software*, 2013.
+
+//In src dir:
+make clean
+make
+
+//Modify base_torus_credit.cfg
+chmod +x booksim-fork.sh
