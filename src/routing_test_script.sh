@@ -3,11 +3,6 @@
 echo "=== Single Packet Hop Count Test (5↔10) ==="
 echo ""
 
-# First, let's verify your current traffic.cpp settings
-echo "📋 Make sure your traffic.cpp has:"
-echo "• single_packet: source = 5, dest = 10"
-echo "• single_packet_reverse: source = 10, dest = 5"
-echo ""
 
 # Test with more samples to get hop count statistics
 echo "🧪 Test 1: Forward direction (5→10) with more samples"

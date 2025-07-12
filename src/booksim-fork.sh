@@ -7,6 +7,28 @@ BOOKSIM=./booksim  # Using local build
 BASE_CFG=base_torus_credit.cfg
 OUT_CSV=results.csv
 
+cat > $BASE_CFG << EOF
+topology = torus_credit;
+k = 2;
+n = 2;
+routing_function = dim_order;
+traffic = uniform;
+injection_rate = 0.1;
+
+// === Flow Control ===
+num_vcs = 1;
+vc_buf_size = 100;
+
+// === Packet and Flit ===
+packet_size = 1;
+
+// === Simulation Control ===
+sim_count = 500;
+
+// === Results Output ===
+print_activity = 0;
+EOF
+
 echo "Size,VCs,Traffic,InjectionRate,AvgLatency,MaxLatency" > $OUT_CSV
 
 ks=(2 4 8)
