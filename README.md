@@ -25,6 +25,9 @@ chmod +x booksim-bp.sh
 ./booksim-credit.sh
 ./booksim-bp.sh
 
+# To plot unidir torus_bp latencies
+python3 plot_bp.py
+
 # ---------------
 # Also I added a new trafficpattern to select source and dest nodes to route traffic between
 # In src dir (cd src/)
