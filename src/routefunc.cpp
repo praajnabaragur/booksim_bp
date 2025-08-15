@@ -64,6 +64,38 @@ int gNumVCs;
 
 // ============================================================
 
+void dim_order_torus_bp(const Router *r, const Flit *f, int in_channel,
+                        OutputSet *outputs, bool inject) {
+  // Single VC for backpressure
+  int vcBegin = 0, vcEnd = 0;
+
+  int out_port;
+
+  if(inject) {
+    out_port = -1;  // inj
+  } else {
+    int dest = f->dest;
+    int cur  = r->GetID();
+
+    // Route dimension by dimension, always clockwise (positive)
+    for (int dim = 0; dim < gN; ++dim) {
+      int cur_pos  = (cur  / powi(gK, dim)) % gK;
+      int dest_pos = (dest / powi(gK, dim)) % gK;
+      if (cur_pos != dest_pos) {
+        out_port = dim;          // for unidirectional, port==dim
+        outputs->Clear();
+        outputs->AddRange(out_port, vcBegin, vcEnd);
+        return;
+      }
+    }
+    // reached destination → ejection
+    out_port = gN;
+  }
+
+  outputs->Clear();
+  outputs->AddRange(out_port, vcBegin, vcEnd);
+}
+
 void dim_order_torus_credit( const Router *r, const Flit *f, int in_channel, 
                        OutputSet *outputs, bool inject )
 {
@@ -2007,6 +2039,7 @@ void InitializeRoutingMap( const Configuration & config )
 
   /* Register routing functions here */
   gRoutingFunctionMap["dim_order_torus_credit"] = &dim_order_torus_credit;
+  gRoutingFunctionMap["dim_order_torus_bp"]  = &dim_order_torus_bp;
 
 
   // ===================================================

@@ -12,15 +12,19 @@ If you use BookSim in your research, we would appreciate the following citation 
 Nan Jiang, Daniel U. Becker, George Michelogiannakis, James Balfour, Brian Towles, John Kim and William J. Dally. A Detailed and Flexible Cycle-Accurate Network-on-Chip Simulator. In *Proceedings of the 2013 IEEE International Symposium on Performance Analysis of Systems and Software*, 2013.
 
 ```bash
-# To test unidirectional torus with credits
+
+# To test unidirectional torus with credits or backpressure
 # In src dir (cd src/)
 make clean
 make
 
-# Modify base_torus_credit.cfg or run the comparison script
-chmod +x booksim-fork.sh
-./booksim-fork.sh
-python3 plot.py
+# Modify base_torus_credit.cfg or base_torus_bp.cfg or run the comparison script
+chmod +x booksim-credit.sh
+chmod +x booksim-bp.sh
+
+./booksim-credit.sh
+./booksim-bp.sh
+
 # ---------------
 # Also I added a new trafficpattern to select source and dest nodes to route traffic between
 # In src dir (cd src/)

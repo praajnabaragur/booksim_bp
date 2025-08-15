@@ -48,6 +48,7 @@
 #include "anynet.hpp"
 #include "dragonfly.hpp"
 #include "torus_credit.hpp"
+#include "torus_bp.hpp"
 
 
 
@@ -89,6 +90,9 @@ Network * Network::New(const Configuration & config, const string & name)
   } else if ( topo == "torus_credit" ) {
     TorusCredit::RegisterRoutingFunctions();
     n = new TorusCredit( config, name );
+  } else if (topo == "torus_bp") {
+    TorusBP::RegisterRoutingFunctions();
+    n = new TorusBP( config, name );
   } else if ( topo == "mesh" ) {
     KNCube::RegisterRoutingFunctions() ;
     n = new KNCube( config, name, true );
