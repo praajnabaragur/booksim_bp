@@ -5,7 +5,7 @@
 
 BOOKSIM=./booksim  # Using local build
 BASE_CFG=base_torus_credit.cfg
-OUT_CSV=results_credit.csv
+OUT_CSV=results.csv
 
 cat > $BASE_CFG << EOF
 topology = torus_credit;
